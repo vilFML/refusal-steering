@@ -1,0 +1,31 @@
+# Single source of truth for every experiment. Later sections fill in `steering`.
+seed: 42
+
+model:
+  name: Qwen/Qwen3-4B
+  dtype: float16              # T4 has no native bf16
+  attn_implementation: sdpa   # no FlashAttention-2 on T4
+  enable_thinking: false      # fixed for ALL conditions
+
+generation:
+  do_sample: false            # greedy -> deterministic, differences come only from the intervention
+  max_new_tokens: 200
+  batch_size: 8               # lower to 4 if you hit OOM
+
+data:
+  harmful_dataset: mlabonne/harmful_behaviors
+  harmless_dataset: mlabonne/harmless_alpaca
+  sizes:                      # disjoint splits, drawn with `seed`
+    train: {harmful: 200, harmless: 200}   # direction extraction ONLY
+    val:   {harmful: 64,  harmless: 64}    # layer / alpha selection ONLY
+    test:  {harmful: 100, harmless: 50}    # final comparison, run once
+
+refusal:
+  window_chars: 100           # a refusal phrase must appear in the first N characters
+  sanity_min_rate: 0.70       # baseline on harmful prompts should be at least this
+
+# Filled in by Sections 2-3 (not used yet)
+steering:
+  layer: null
+  position: -1
+  alpha: null

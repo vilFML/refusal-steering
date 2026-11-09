@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.env
+
+# Raw generations may contain harmful content -> never commit them (see README, Ethics)
+outputs/*
+!outputs/.gitkeep
+
+# Result summaries and review sheets are small, but keep the repo clean of local runs
+results/*
+!results/.gitkeep
